@@ -7,7 +7,18 @@ const settings = require('./settings');
 const memory = require('./memory');
 const { state } = require('./connection');
 
-const sendMenu = (ctx) => ctx.reply(buildMenu(ctx.commandList));
+const MENU_IMAGE = path.join(__dirname, '278714.jpg');
+
+const sendMenu = async (ctx) => {
+  const text = buildMenu(ctx.commandList);
+  if (!fs.existsSync(MENU_IMAGE)) return ctx.reply(text);
+  const image = fs.readFileSync(MENU_IMAGE);
+  if (text.length <= 1000) {
+    return ctx.sock.sendMessage(ctx.jid, { image, caption: text }, { quoted: ctx.msg });
+  }
+  await ctx.sock.sendMessage(ctx.jid, { image, caption: 'Rimuru menu' }, { quoted: ctx.msg });
+  return ctx.reply(text);
+};
 
 function fmtUptime(sec) {
   const d = Math.floor(sec / 86400), h = Math.floor((sec % 86400) / 3600), m = Math.floor((sec % 3600) / 60);
