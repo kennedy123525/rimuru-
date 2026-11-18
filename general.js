@@ -13,11 +13,7 @@ const sendMenu = async (ctx) => {
   const text = buildMenu(ctx.commandList);
   if (!fs.existsSync(MENU_IMAGE)) return ctx.reply(text);
   const image = fs.readFileSync(MENU_IMAGE);
-  if (text.length <= 1000) {
-    return ctx.sock.sendMessage(ctx.jid, { image, caption: text }, { quoted: ctx.msg });
-  }
-  await ctx.sock.sendMessage(ctx.jid, { image, caption: 'Rimuru menu' }, { quoted: ctx.msg });
-  return ctx.reply(text);
+  return ctx.sock.sendMessage(ctx.jid, { image, caption: text }, { quoted: ctx.msg });
 };
 
 function fmtUptime(sec) {
