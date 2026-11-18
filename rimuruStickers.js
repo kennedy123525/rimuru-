@@ -7,8 +7,9 @@ const CHANCE = 1; // 1 = sticker on every reply, 0.5 = about half of replies
 const MOOD_NAMES = ['angry', 'happy', 'sad', 'laugh', 'surprised', 'neutral'];
 const MAX_BYTES = 100 * 1024;
 const cache = new Map();
+const pending = new Map(); // chat id -> mood chosen for the next reply
 
-// Checked in this order; the first match wins.
+// Backup guess from keywords, used only when no mood was chosen.
 const MOODS = [
   ['laugh', /(lol|lmao|haha|hehe|funny|joke|hilarious)|😂|🤣|😆/i],
   ['angry', /\b(angry|furious|mad|rage|annoy\w*|shut up|stupid|idiot|dumb|hate|pissed|irritat\w*|how dare|damn|trash|fool|disrespect\w*|insult\w*|enough)\b|😡|🤬|😠/i],
@@ -17,13 +18,25 @@ const MOODS = [
   ['happy', /\b(happy|glad|great|awesome|nice|love|thanks?|thank you|welcome|yay|excellent|proud|cool|wonderful|enjoy)\b|😊|😄|😁|🥰|💙|❤/i],
 ];
 
-// Looks at Rimuru's reply first, then at what the person said.
 function detectMood(...texts) {
   for (const t of texts) {
     if (!t) continue;
     for (const [mood, re] of MOODS) if (re.test(t)) return mood;
   }
   return 'neutral';
+}
+
+// Remembers the mood for the next reply in this chat.
+function setMood(jid, mood) {
+  if (MOOD_NAMES.includes(mood)) pending.set(jid, mood);
+}
+
+// Pulls a [mood:xxx] tag off the end of an AI answer. Returns { text, mood }.
+function splitMood(answer) {
+  const src = answer || '';
+  const m = /\[\s*mood\s*[:=]\s*([a-z]+)\s*\]/i.exec(src);
+  const text = src.replace(/\[\s*mood\s*[:=]\s*[a-z]+\s*\]/gi, '').trim();
+  return { text, mood: m ? m[1].toLowerCase() : null };
 }
 
 function filesIn(dir) {
@@ -69,8 +82,10 @@ async function load(file) {
 
 async function maybeSend(sock, jid, replyText, userText) {
   try {
+    const chosen = pending.get(jid);
+    pending.delete(jid);
     if (Math.random() > CHANCE) return;
-    const file = pickFile(detectMood(replyText, userText));
+    const file = pickFile(chosen || detectMood(replyText, userText));
     if (!file) return;
     const sticker = await load(file);
     if (!sticker) return;
@@ -80,4 +95,4 @@ async function maybeSend(sock, jid, replyText, userText) {
   }
 }
 
-module.exports = { maybeSend, detectMood };
+module.exports = { maybeSend, detectMood, setMood, splitMood };
