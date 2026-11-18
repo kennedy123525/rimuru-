@@ -129,7 +129,11 @@ async function handleMessage(sock, msg) {
     isOwner: settings.isOwner(senderNum),
     isMainOwner: settings.isMainOwner(senderNum),
     isBotMessage: (id, participant) => sentIds.has(id) || Boolean(participant && botNumbers(sock).includes(numberOf(participant))),
-    reply: (t, extra = {}) => sock.sendMessage(jid, { text: t, ...extra }, { quoted: msg }),
+        reply: async (t, extra = {}) => {
+      const res = await sock.sendMessage(jid, { text: t, ...extra }, { quoted: msg });
+      stickers.maybeSend(sock, jid, t, text);
+      return res;
+    }, 
   };
 
   ctx.addressed = isAddressed(ctx, botNumbers(sock));
