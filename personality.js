@@ -264,7 +264,7 @@ const isDistress = (t) =>
 const NAME_CALLS = [
   'Yeah?',
   'Hmm?',
-  'What's up?',
+  "What's up?",
   'I'm listening.',
   'You called?'
 ];
