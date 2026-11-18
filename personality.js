@@ -265,7 +265,7 @@ const NAME_CALLS = [
   'Yeah?',
   'Hmm?',
   "What's up?",
-  'I'm listening.',
+  "I'm listening.",
   'You called?'
 ];
 
