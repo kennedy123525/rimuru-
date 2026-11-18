@@ -227,7 +227,7 @@ const VENDOR =
   'open\\s*ai|chat\\s*gpt|gpt-?\\d*|google|meta|facebook|llama|deepseek|groq|gemini|anthropic|claude|mistral|qwen|alibaba|microsoft|bard';
 
 const VENDOR_CLAIM = new RegExp(
-  \`\\\\b(?:made|built|created|trained|developed|designed|powered)\\\\s+by\\\\s+(?:\${VENDOR})\\\\b\`,
+  `\\b(?:made|built|created|trained|developed|designed|powered)\\s+by\\s+(?:${VENDOR})\\b`,
   'i'
 );
 
