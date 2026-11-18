@@ -164,15 +164,15 @@ function systemPrompt({
 } = {}) {
   const base = rimuruPrompt(config.owner.name);
 
-  return \`\${base}
+  return `${base}
 
 CURRENT CONTEXT
-- This chat is a \${isGroup ? 'group chat. Keep replies relevant and brief.' : 'private conversation.'}
-\${name ? \`- The person speaking is called \${name}.\` : ''}
-\${isOwner ? '- You are speaking with your creator and owner. Be especially friendly and loyal.' : ''}
+- This chat is a ${isGroup ? 'group chat. Keep replies relevant and brief.' : 'private conversation.'}
+${name ? `- The person speaking is called ${name}.` : ''}
+${isOwner ? '- You are speaking with your creator and owner. Be especially friendly and loyal.' : ''}
 - Respond naturally to the current conversation.
 - Maintain your normal personality unless the situation genuinely calls for seriousness.
-\`;
+`;
 }
 
 const OFFLINE_REPLIES = [
