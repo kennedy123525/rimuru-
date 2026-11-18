@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const config = require('./config');
 const { buildMenu } = require('./menu');
 const fallback = require('./fallback');
