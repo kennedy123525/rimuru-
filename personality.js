@@ -271,7 +271,7 @@ const NAME_CALLS = [
 
 const OWNER_NAME_CALLS = [
   'Yeah?',
-  'I'm here.',
+  "I'm here.",
   'Hmm? What is it?',
   'I'm listening.'
 ];
