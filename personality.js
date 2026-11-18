@@ -273,7 +273,7 @@ const OWNER_NAME_CALLS = [
   'Yeah?',
   "I'm here.",
   'Hmm? What is it?',
-  'I'm listening.'
+  "I'm listening."
 ];
 
 const nameCallReply = (isOwner = false) => {
