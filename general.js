@@ -7,7 +7,7 @@ const settings = require('./settings');
 const memory = require('./memory');
 const { state } = require('./connection');
 
-const MENU_IMAGE = path.join(__dirname, '278714.jpg');
+const MENU_IMAGE = path.join(__dirname, 'IMG-20261118-WA0188.jpg');
 
 const sendMenu = async (ctx) => {
   const text = buildMenu(ctx.commandList);
