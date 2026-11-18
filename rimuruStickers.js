@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-const { Sticker } = require('wa-sticker-formatter');
+const sharp = require('sharp');
 
 const ROOT = path.join(__dirname, 'stickers');
 const CHANCE = 1; // 1 = sticker on every reply, 0.5 = about half of replies
 const MOOD_NAMES = ['angry', 'happy', 'sad', 'laugh', 'surprised', 'neutral'];
+const MAX_BYTES = 100 * 1024;
 const cache = new Map();
 
 // Checked in this order; the first match wins.
@@ -43,13 +44,26 @@ function pickFile(mood) {
   return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
 }
 
+// Same method as the .s command: 512x512 rounded WebP using only sharp.
+async function toSticker(buf) {
+  const S = 512;
+  const mask = Buffer.from(`<svg width="${S}" height="${S}"><rect width="${S}" height="${S}" rx="96" ry="96" fill="#fff"/></svg>`);
+  for (const quality of [85, 65, 45, 30]) {
+    const out = await sharp(buf)
+      .resize(S, S, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+      .composite([{ input: mask, blend: 'dest-in' }])
+      .webp({ quality })
+      .toBuffer();
+    if (out.length <= MAX_BYTES) return out;
+  }
+  return null;
+}
+
 async function load(file) {
   if (cache.has(file)) return cache.get(file);
-  let buf = fs.readFileSync(file);
-  if (!/\.webp$/i.test(file)) {
-    buf = await new Sticker(buf, { pack: 'Rimuru', author: 'Rimuru', type: 'full', quality: 60 }).toBuffer();
-  }
-  cache.set(file, buf);
+  const raw = fs.readFileSync(file);
+  const buf = /\.webp$/i.test(file) ? raw : await toSticker(raw);
+  if (buf) cache.set(file, buf);
   return buf;
 }
 
@@ -59,6 +73,7 @@ async function maybeSend(sock, jid, replyText, userText) {
     const file = pickFile(detectMood(replyText, userText));
     if (!file) return;
     const sticker = await load(file);
+    if (!sticker) return;
     await sock.sendMessage(jid, { sticker });
   } catch (e) {
     console.error('Sticker failed:', e.message);
