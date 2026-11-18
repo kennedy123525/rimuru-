@@ -219,8 +219,8 @@ function identityReply(text, isOwner = false) {
   const o = config.owner.name;
 
   return CREATOR_Q.test(t)
-    ? \`\${o} created me. They're my creator.\`
-    : \`I'm Rimuru Tempest. \${o} created me.\`;
+    ? `${o} created me. They're my creator.`
+    : `I'm Rimuru Tempest. ${o} created me.`;
 }
 
 const VENDOR =
