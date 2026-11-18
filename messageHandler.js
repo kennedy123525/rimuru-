@@ -15,7 +15,7 @@ const { systemPrompt, offlineReply, nameCallReply, cleanReply, isBoilerplate, is
 const clapbacks = require('./clapbacks');
 const chatlog = require('./chatlog');
 const extras = require('./extras');
-
+const stickers = require('./rimuruStickers');
 // How much Rimuru tolerates this person (see affinity.js). Added to him instructions.
 function bondNote(num, isOwner) {
   if (isOwner) return '';
