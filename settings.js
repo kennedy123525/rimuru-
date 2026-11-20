@@ -3,7 +3,7 @@
 const config = require('./config');
 const { createStore } = require('./jsonStore');
 
-const store = createStore('settings', { aiOff: {}, protectEnabled: null, claimed: [], protectAlias: [], subOwners: [], prefix: null, afk: {}, sleeping: {} });
+const store = createStore('settings', { aiOff: {}, protectEnabled: null, claimed: [], protectAlias: [], subOwners: [], prefix: null, afk: {}, sleeping: {}, warnings: {} });
 
 function d() {
   const s = store.data;
