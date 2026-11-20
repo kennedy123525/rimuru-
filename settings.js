@@ -120,8 +120,7 @@ function setAfk(num, info) { d().afk[num] = info; store.save(); }
 function clearAfk(num) { delete d().afk[num]; store.save(); }
 
 module.exports = {
-  isAiOn, setAi, isProtectOn, setProtect, prefix, setPrefix,
-isBlocked, addBlocked, removeBlocked,
+  
   claimed, isOwner, isMainOwner, isSubOwner, subOwners, addSubOwners, removeSubOwners, addClaimed, clearClaimed, addProtectAlias, protectedIds,
   getAfk, setAfk, clearAfk, isAsleep, setSleep, getWarnings, addWarning, clearWarning,
   init: async () => { await store.load(); d(); },
