@@ -132,4 +132,33 @@ module.exports = [
       return ctx.reply('Done. New face.');
     },
   },
+  {
+    name: 'block', category: 'OWNER', menu: ['block @user'], mainOwnerOnly: true,
+    run: (ctx) => {
+      const targets = targetNumbers(ctx);
+      if (!targets.length) return ctx.reply(`Tag a user, reply to their message, or type their number.\nExample: ${settings.prefix()}block @user`);
+
+      const safeTargets = targets.filter((n) => !settings.isMainOwner(n));
+      if (!safeTargets.length) return ctx.reply("I can't block the main owner.");
+
+      settings.addBlocked(safeTargets);
+      return ctx.reply(`🚫 Blocked: ${safeTargets.join(', ')}`);
+    },
+  },
+  {
+    name: 'unblock', category: 'OWNER', menu: ['unblock @user'], mainOwnerOnly: true,
+    run: (ctx) => {
+      const targets = targetNumbers(ctx);
+      if (!targets.length) return ctx.reply(`Tag a user, reply to their message, or type their number.\nExample: ${settings.prefix()}unblock @user`);
+
+      const blocked = targets.filter((n) => settings.isBlocked(n));
+      settings.removeBlocked(targets);
+
+      return ctx.reply(
+        blocked.length
+          ? `✅ Unblocked: ${blocked.join(', ')}`
+          : "None of those users were blocked."
+      );
+    },
+  },
 ];
