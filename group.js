@@ -155,4 +155,29 @@ module.exports = [
       });
     },
   },
+  },
+  {
+    name: 'delete', aliases: ['del'], category: 'GROUP TOOLS', menu: ['delete'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const quoted = ctx.ctxInfo?.stanzaId;
+      const participant = ctx.ctxInfo?.participant;
+
+      if (!quoted || !participant) {
+        return ctx.reply('Reply to the message you want me to delete.');
+      }
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        delete: {
+          remoteJid: ctx.jid,
+          fromMe: false,
+          id: quoted,
+          participant,
+        },
+      });
+    },
+  },
+];
 ];
