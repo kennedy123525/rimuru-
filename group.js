@@ -58,6 +58,61 @@ module.exports = [
       await ctx.sock.groupSettingUpdate(ctx.jid, 'announcement');
       return ctx.reply('Group muted. Only admins can send messages now.');
     },
+  {
+    name: 'warn', category: 'GROUP TOOLS', menu: ['warn @user'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const target = ctx.mentioned?.[0] || ctx.ctxInfo?.participant;
+      if (!target) return ctx.reply('Tag or reply to the person you want to warn.');
+
+      const num = numberOf(target);
+      if (num === ctx.senderNum || num === numberOf(ctx.sock.user.id)) {
+        return ctx.reply('You cannot warn yourself or the bot.');
+      }
+
+      if (settings.isOwner(target) || settings.isSubOwner(target)) {
+        return ctx.reply('You cannot warn a protected user.');
+      }
+
+      const count = settings.addWarning(ctx.jid, num);
+
+      if (count >= 3) {
+        if (info.admins.has(num)) {
+          return ctx.reply(`${target} has ${count} warnings, but is an admin. Demote them before removal.`);
+        }
+
+        await ctx.sock.groupParticipantsUpdate(ctx.jid, [target], 'remove');
+
+        for (let i = 0; i < count; i++) {
+          settings.clearWarning(ctx.jid, num);
+        }
+
+        return ctx.reply(`${target} reached 3 warnings and has been removed from the group.`);
+      }
+
+      return ctx.reply(`${target} has received a warning. Total: ${count}/3.`);
+    },
+  },
+  {
+    name: 'unwarn', category: 'GROUP TOOLS', menu: ['unwarn @user'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const target = ctx.mentioned?.[0] || ctx.ctxInfo?.participant;
+      if (!target) return ctx.reply('Tag or reply to the person whose warning you want to remove.');
+
+      const num = numberOf(target);
+      const current = settings.getWarnings(ctx.jid, num);
+
+      if (!current) return ctx.reply('That user has no warnings.');
+
+      const remaining = settings.clearWarning(ctx.jid, num);
+      return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
+    },
+  },
   },
   {
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
