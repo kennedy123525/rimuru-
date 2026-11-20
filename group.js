@@ -58,7 +58,6 @@ module.exports = [
       await ctx.sock.groupSettingUpdate(ctx.jid, 'announcement');
       return ctx.reply('Group muted. Only admins can send messages now.');
     },
-  },
   {
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
     run: async (ctx) => {
