@@ -155,6 +155,7 @@ module.exports = [
       });
     },
   },
+  {
     name: 'delete', aliases: ['del'], category: 'GROUP TOOLS', menu: ['delete'],
     run: async (ctx) => {
       const info = await guard(ctx);
