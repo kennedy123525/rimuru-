@@ -91,7 +91,13 @@ module.exports = [
           return ctx.reply(`${target} has ${count} warnings, but is an admin. Demote them before removal.`);
         }
 
-        await ctx.sock.groupParticipantsUpdate(ctx.jid, [target], 'remove');
+        const removal = await ctx.sock.groupParticipantsUpdate(ctx.jid, [target], 'remove');
+
+        const failed = (removal || []).some((r) => String(r.status) !== '200');
+
+        if (failed) {
+          return ctx.reply(`${target} reached 3 warnings, but I couldn't remove them.`);
+        }
 
         for (let i = 0; i < count; i++) {
           settings.clearWarning(ctx.jid, num);
