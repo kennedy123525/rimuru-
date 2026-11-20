@@ -59,7 +59,6 @@ module.exports = [
       return ctx.reply('Group muted. Only admins can send messages now.');
     },
   },
-  },
   {
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
     run: async (ctx) => {
