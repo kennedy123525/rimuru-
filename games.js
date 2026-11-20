@@ -279,7 +279,10 @@ module.exports = [
         'Anos Voldigoad — The Misfit of Demon King Academy\nPower: Extraordinary magical abilities.',
         'Frieren — Frieren: Beyond Journey’s End\nPower: Powerful ancient magic.'
       ];
-      return ctx.reply(`⭐ *RANDOM ANIME CHARACTER*\n\n${pick(characters)}`);
+            return ctx.reply(`🎌 *RANDOM ANIME*\n\n${pick(anime)}`);
+    },
+  },
+  {
     },
   },
 ];
