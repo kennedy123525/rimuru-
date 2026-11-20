@@ -218,7 +218,6 @@ module.exports = [
       return ctx.reply(hangView(g));
     },
   },
-  {
       {
     name: 'top', aliases: ['leaderboard', 'gamescore'], category: 'GAMES', menu: ['top'],
     run: (ctx) => {
