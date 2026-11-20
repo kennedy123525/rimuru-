@@ -8,7 +8,7 @@ const MAX_BYTES = 30 * 1024 * 1024;
 
 module.exports = [
   {
-    name: 'hidetag', aliases: ['htag', 'tagall'], category: 'GROUP TOOLS', menu: ['hidetag [text]'],
+    name: 'hidetag', aliases: ['htag'], category: 'GROUP TOOLS', menu: ['hidetag [text]'],
     run: async (ctx) => {
       if (!ctx.isGroup) return ctx.reply('Groups only.');
       const info = await groupInfo(ctx.sock, ctx.jid);
