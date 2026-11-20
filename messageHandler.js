@@ -124,8 +124,6 @@ async function handleMessage(sock, msg) {
 
   const text = getText(m).trim();
   const isGroup = jid.endsWith('@g.us');
-  const sender = msg.key.participant || jid;
-  const senderNum = numberOf(sender);
   const ctxInfo = getContext(m);
   const ctx = {
     sock, msg, m, jid, sender, senderNum, text, isGroup, ctxInfo, receivedAt,
