@@ -1,5 +1,4 @@
-isAiOn, setAi, isProtectOn, setProtect, prefix, setPrefix,
-isBlocked, addBlocked, removeBlocked,// Switches and small facts that survive restarts:
+// Switches and small facts that survive restarts:
 // AI on/off per chat, Kennedy protection, claimed owner ids, prefix, AFK list.
 const config = require('./config');
 const { createStore } = require('./jsonStore');
