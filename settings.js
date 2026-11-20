@@ -68,6 +68,25 @@ const protectedIds = () => uniq([...config.protectedContact.ids, ...d().claimed,
 const isAsleep = (chatId) => Boolean(d().sleeping[chatId]);
 function setSleep(chatId, on) { if (on) d().sleeping[chatId] = true; else delete d().sleeping[chatId]; store.save(); }
 
+// --- Warnings
+const getWarnings = (chatId, num) => d().warnings[chatId]?.[num] || 0;
+
+function addWarning(chatId, num) {
+  const s = d();
+  if (!s.warnings[chatId]) s.warnings[chatId] = {};
+  s.warnings[chatId][num] = (s.warnings[chatId][num] || 0) + 1;
+  store.save();
+  return s.warnings[chatId][num];
+}
+
+function clearWarning(chatId, num) {
+  const s = d();
+  if (!s.warnings[chatId]) return;
+  delete s.warnings[chatId][num];
+  if (!Object.keys(s.warnings[chatId]).length) delete s.warnings[chatId];
+  store.save();
+}
+
 // --- AFK
 const getAfk = (num) => d().afk[num] || null;
 function setAfk(num, info) { d().afk[num] = info; store.save(); }
