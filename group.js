@@ -73,7 +73,7 @@ module.exports = [
         return ctx.reply('You cannot warn yourself or the bot.');
       }
 
-      if (settings.isOwner(target) || settings.isSubOwner(target)) {
+if (settings.isOwner(num) || settings.isSubOwner(num)) { 
         return ctx.reply('You cannot warn a protected user.');
       }
 
