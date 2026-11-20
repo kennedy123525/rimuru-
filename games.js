@@ -238,6 +238,7 @@ module.exports = [
       });
     },
   },
+  
   {
     name: 'quote', category: 'GAMES', menu: ['quote'],
     run: (ctx) => {
@@ -248,41 +249,88 @@ module.exports = [
         'Never stop moving forward.',
         'Your choices shape your future.',
         'Believe in the person you are becoming.',
+        'A quiet heart can hold the strongest determination.',
+        'Every failure is another lesson on the road to greatness.',
+        'True power comes from knowing what you stand for.',
+        'The future belongs to those brave enough to create it.'
       ];
-      return ctx.reply(`📜 *Anime Quote*\n\n"${pick(quotes)}"\n\n— Rimuru`);
+      return ctx.reply(`📜 *ANIME QUOTE*\n\n"${pick(quotes)}"\n\n— Rimuru`);
     },
+  },
   {
     name: 'anime', category: 'GAMES', menu: ['anime'],
     run: (ctx) => {
       const anime = [
-        'Solo Leveling — A weak hunter gains a mysterious power and rises through the ranks.',
-        'That Time I Got Reincarnated as a Slime — Rimuru builds a powerful nation of monsters.',
-        'Black Clover — Asta dreams of becoming Wizard King despite having no magic.',
-        'Jujutsu Kaisen — Sorcerers fight dangerous supernatural curses.',
-        'Demon Slayer — Tanjiro sets out to protect his sister and fight demons.',
-        'One Piece — Luffy and his crew explore the seas in search of the ultimate treasure.',
-        'Frieren: Beyond Journey’s End — An elf mage reflects on friendship and the passage of time.',
-        'The Eminence in Shadow — A boy pursues his dream of becoming a mysterious mastermind.'
+        'Solo Leveling — A hunter rises through the ranks with mysterious powers.',
+        'That Time I Got Reincarnated as a Slime — Rimuru builds a nation of monsters.',
+        'Naruto — A young ninja dreams of becoming Hokage.',
+        'Naruto Shippuden — Naruto faces greater challenges and powerful enemies.',
+        'One Piece — Luffy searches for the legendary treasure.',
+        'Jujutsu Kaisen — Sorcerers battle supernatural curses.',
+        'Demon Slayer — Tanjiro fights to protect his sister.',
+        'Black Clover — Asta dreams of becoming Wizard King.',
+        'Dragon Ball Z — Goku protects Earth from powerful threats.',
+        'Dragon Ball Super — Goku discovers new levels of power.',
+        'Bleach — Ichigo becomes a Soul Reaper.',
+        'Hunter x Hunter — Gon searches for his father.',
+        'Attack on Titan — Humanity fights for survival.',
+        'My Hero Academia — Young heroes train to protect society.',
+        'One Punch Man — Saitama searches for a worthy challenge.',
+        'Mob Psycho 100 — A young psychic learns to control his emotions.',
+        'Fairy Tail — Wizards go on exciting guild adventures.',
+        'Fire Force — Special firefighters battle mysterious flames.',
+        'Tokyo Revengers — A boy tries to change the past.',
+        'Blue Lock — Young strikers compete to become the best.',
+        'Haikyuu!! — A volleyball team chases its championship dream.',
+        'Dr. Stone — Science helps rebuild civilization.',
+        'Overlord — A powerful player finds himself in another world.',
+        'The Eminence in Shadow — A boy creates a secret organization.',
+        'Frieren: Beyond Journey’s End — An elf mage explores memories and friendship.',
+        'Mushoku Tensei — A man gets another chance at life in a fantasy world.',
+        'The Seven Deadly Sins — Legendary knights reunite to protect a kingdom.',
+        'Chainsaw Man — A young man gains unusual devil powers.',
+        'Kaiju No. 8 — A man gains the ability to transform into a monster.',
+        'The God of High School — Fighters compete in a powerful martial arts tournament.'
       ];
       return ctx.reply(`🎌 *RANDOM ANIME*\n\n${pick(anime)}`);
     },
+  },
   {
     name: 'character', category: 'GAMES', menu: ['character'],
     run: (ctx) => {
       const characters = [
         'Rimuru Tempest — That Time I Got Reincarnated as a Slime\nPower: Skill absorption and evolution.',
-        'Sung Jinwoo — Solo Leveling\nPower: Shadow-based abilities and rapid growth.',
-        'Naruto Uzumaki — Naruto\nPower: Shadow clones and powerful chakra techniques.',
-        'Monkey D. Luffy — One Piece\nPower: Rubber-like abilities and creative combat.',
+        'Sung Jinwoo — Solo Leveling\nPower: Shadow-based abilities.',
+        'Naruto Uzumaki — Naruto\nPower: Shadow clones and chakra techniques.',
+        'Sasuke Uchiha — Naruto\nPower: Sharingan and lightning techniques.',
+        'Monkey D. Luffy — One Piece\nPower: Rubber-like abilities and Haki.',
+        'Roronoa Zoro — One Piece\nPower: Three-sword fighting style.',
         'Satoru Gojo — Jujutsu Kaisen\nPower: Limitless and Six Eyes.',
+        'Yuji Itadori — Jujutsu Kaisen\nPower: Superhuman strength and cursed energy.',
         'Asta — Black Clover\nPower: Anti-magic.',
-        'Anos Voldigoad — The Misfit of Demon King Academy\nPower: Extraordinary magical abilities.',
-        'Frieren — Frieren: Beyond Journey’s End\nPower: Powerful ancient magic.'
+        'Yuno — Black Clover\nPower: Wind and Star Magic.',
+        'Goku — Dragon Ball\nPower: Saiyan transformations and ki.',
+        'Vegeta — Dragon Ball\nPower: Saiyan power and energy attacks.',
+        'Ichigo Kurosaki — Bleach\nPower: Soul Reaper abilities.',
+        'Saitama — One Punch Man\nPower: Extraordinary physical strength.',
+        'Genos — One Punch Man\nPower: Advanced cyborg abilities.',
+        'Killua Zoldyck — Hunter x Hunter\nPower: Electricity-based Nen.',
+        'Gon Freecss — Hunter x Hunter\nPower: Enhancer Nen.',
+        'Eren Yeager — Attack on Titan\nPower: Titan transformations.',
+        'Levi Ackerman — Attack on Titan\nPower: Exceptional combat skill.',
+        'Izuku Midoriya — My Hero Academia\nPower: One For All.',
+        'Shoto Todoroki — My Hero Academia\nPower: Ice and fire.',
+        'Natsu Dragneel — Fairy Tail\nPower: Fire Dragon Slayer Magic.',
+        'Erza Scarlet — Fairy Tail\nPower: Requip Magic.',
+        'Shigeo Kageyama — Mob Psycho 100\nPower: Psychic abilities.',
+        'Anos Voldigoad — The Misfit of Demon King Academy\nPower: Vast magical abilities.',
+        'Cid Kagenou — The Eminence in Shadow\nPower: Powerful magic and swordsmanship.',
+        'Frieren — Frieren: Beyond Journey’s End\nPower: Ancient and powerful magic.',
+        'Denji — Chainsaw Man\nPower: Chainsaw transformation.',
+        'Kafka Hibino — Kaiju No. 8\nPower: Kaiju transformation.',
+        'Jin Mori — The God of High School\nPower: Renewal Taekwondo and borrowed power.'
       ];
-            return ctx.reply(`🎌 *RANDOM ANIME*\n\n${pick(anime)}`);
-    },
-  },
-  {
+      return ctx.reply(`⭐ *RANDOM ANIME CHARACTER*\n\n${pick(characters)}`);
     },
   },
 ];
