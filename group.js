@@ -113,8 +113,6 @@ module.exports = [
       const remaining = settings.clearWarning(ctx.jid, num);
       return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
     },
-  },
-  },
   {
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
     run: async (ctx) => {
