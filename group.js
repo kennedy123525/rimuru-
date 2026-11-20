@@ -1,5 +1,4 @@
-// Group tools: add, kick. Only group admins (or the owner) can use them,
-// and Rimuru must be a group admin himself (WhatsApp's rule, not ours).
+// Group tools: add, kick, mute and more.
 const settings = require('./settings');
 const { numberOf } = require('./jid');
 const { groupInfo } = require('./groupTools');
