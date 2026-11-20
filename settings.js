@@ -13,6 +13,7 @@ function d() {
   s.subOwners = s.subOwners || [];
   s.sleeping = s.sleeping || {};
   s.afk = s.afk || {};
+  s.warnings = s.warnings || {};
   if (s.protectEnabled === undefined) s.protectEnabled = null;
   if (s.prefix === undefined) s.prefix = null;
   return s;
