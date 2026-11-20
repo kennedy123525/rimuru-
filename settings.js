@@ -20,6 +20,21 @@ function d() {
 }
 const uniq = (a) => [...new Set(a)];
 
+// --- Blocked users
+const isBlocked = (num) => d().blocked.includes(num);
+
+function addBlocked(nums) {
+  const s = d();
+  s.blocked = uniq([...s.blocked, ...nums.filter(Boolean)]);
+  store.save();
+}
+
+function removeBlocked(nums) {
+  const s = d();
+  s.blocked = s.blocked.filter((n) => !nums.includes(n));
+  store.save();
+}
+
 // --- AI on/off per chat
 const isAiOn = (chatId) => !d().aiOff[chatId];
 function setAi(chatId, on) { if (on) delete d().aiOff[chatId]; else d().aiOff[chatId] = true; store.save(); }
