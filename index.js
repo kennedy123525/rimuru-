@@ -87,7 +87,7 @@ function parse(text, ctx) {
 async function run(ctx) {
   const parsed = parse(ctx.text, ctx);
   if (!parsed) return false;
-    const { cmd, args } = parsed;
+  const { cmd, args } = parsed;
 
   if (settings.isBlocked(ctx.senderNum) && !ctx.isMainOwner) {
     await ctx.reply("🚫 You're blocked from using Rimuru's commands.");
