@@ -50,4 +50,13 @@ module.exports = [
       return ctx.reply(failed.length ? "Couldn't remove everyone. Admins can't be removed by me." : 'Gone.');
     },
   },
+  {
+    name: 'mute', category: 'GROUP TOOLS', menu: ['mute'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+      await ctx.sock.groupSettingUpdate(ctx.jid, 'announcement');
+      return ctx.reply('Group muted. Only admins can send messages now.');
+    },
+  },
 ];
