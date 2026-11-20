@@ -252,5 +252,37 @@ module.exports = [
       return ctx.reply(`📜 *Anime Quote*\n\n"${pick(quotes)}"\n\n— Rimuru`);
     },
   },
+  },
+  {
+    name: 'anime', category: 'GAMES', menu: ['anime'],
+    run: (ctx) => {
+      const anime = [
+        'Solo Leveling — A weak hunter gains a mysterious power and rises through the ranks.',
+        'That Time I Got Reincarnated as a Slime — Rimuru builds a powerful nation of monsters.',
+        'Black Clover — Asta dreams of becoming Wizard King despite having no magic.',
+        'Jujutsu Kaisen — Sorcerers fight dangerous supernatural curses.',
+        'Demon Slayer — Tanjiro sets out to protect his sister and fight demons.',
+        'One Piece — Luffy and his crew explore the seas in search of the ultimate treasure.',
+        'Frieren: Beyond Journey’s End — An elf mage reflects on friendship and the passage of time.',
+        'The Eminence in Shadow — A boy pursues his dream of becoming a mysterious mastermind.'
+      ];
+      return ctx.reply(`🎌 *RANDOM ANIME*\n\n${pick(anime)}`);
+    },
+  {
+    name: 'character', category: 'GAMES', menu: ['character'],
+    run: (ctx) => {
+      const characters = [
+        'Rimuru Tempest — That Time I Got Reincarnated as a Slime\nPower: Skill absorption and evolution.',
+        'Sung Jinwoo — Solo Leveling\nPower: Shadow-based abilities and rapid growth.',
+        'Naruto Uzumaki — Naruto\nPower: Shadow clones and powerful chakra techniques.',
+        'Monkey D. Luffy — One Piece\nPower: Rubber-like abilities and creative combat.',
+        'Satoru Gojo — Jujutsu Kaisen\nPower: Limitless and Six Eyes.',
+        'Asta — Black Clover\nPower: Anti-magic.',
+        'Anos Voldigoad — The Misfit of Demon King Academy\nPower: Extraordinary magical abilities.',
+        'Frieren — Frieren: Beyond Journey’s End\nPower: Powerful ancient magic.'
+      ];
+      return ctx.reply(`⭐ *RANDOM ANIME CHARACTER*\n\n${pick(characters)}`);
+    },
+  },
 ];
-module.exports.winnerOf = winnerOf; // exported for tests
+module.exports.winnerOf = winnerOf;
