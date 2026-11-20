@@ -203,4 +203,33 @@ module.exports = [
       return ctx.reply('Promotion successful! They are now a group admin. 👑');
     },
   },
+  {
+    name: 'demote', category: 'GROUP TOOLS', menu: ['demote @user'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const target = ctx.mentioned?.[0] || ctx.ctxInfo?.participant;
+
+      if (!target) {
+        return ctx.reply('Tag or reply to the admin you want to demote.');
+      }
+
+      if (!info.admins.has(numberOf(target))) {
+        return ctx.reply('That person is not an admin.');
+      }
+
+      if (settings.isOwner(numberOf(target))) {
+        return ctx.reply('I cannot demote the bot owner.');
+      }
+
+      const res = await ctx.sock.groupParticipantsUpdate(ctx.jid, [target], 'demote');
+
+      if (res?.some((r) => String(r.status) !== '200')) {
+        return ctx.reply("I couldn't demote that person.");
+      }
+
+      return ctx.reply('Done! That person is no longer a group admin.');
+    },
+  },
 ];
