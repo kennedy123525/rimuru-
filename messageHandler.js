@@ -117,6 +117,11 @@ async function handleMessage(sock, msg) {
 
   learnAliases(msg);
 
+  const sender = msg.key.participant || jid;
+  const senderNum = numberOf(sender);
+
+  if (settings.isBlocked(senderNum) && !settings.isMainOwner(senderNum)) return;
+
   const text = getText(m).trim();
   const isGroup = jid.endsWith('@g.us');
   const sender = msg.key.participant || jid;
