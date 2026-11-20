@@ -1,4 +1,5 @@
-// Switches and small facts that survive restarts:
+isAiOn, setAi, isProtectOn, setProtect, prefix, setPrefix,
+isBlocked, addBlocked, removeBlocked,// Switches and small facts that survive restarts:
 // AI on/off per chat, Kennedy protection, claimed owner ids, prefix, AFK list.
 const config = require('./config');
 const { createStore } = require('./jsonStore');
@@ -120,6 +121,7 @@ function clearAfk(num) { delete d().afk[num]; store.save(); }
 
 module.exports = {
   isAiOn, setAi, isProtectOn, setProtect, prefix, setPrefix,
+isBlocked, addBlocked, removeBlocked,
   claimed, isOwner, isMainOwner, isSubOwner, subOwners, addSubOwners, removeSubOwners, addClaimed, clearClaimed, addProtectAlias, protectedIds,
   getAfk, setAfk, clearAfk, isAsleep, setSleep, getWarnings, addWarning, clearWarning,
   init: async () => { await store.load(); d(); },
