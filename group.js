@@ -115,7 +115,6 @@ module.exports = [
     },
   },
   {
-    name: 'unmute',
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
     run: async (ctx) => {
       const info = await guard(ctx);
