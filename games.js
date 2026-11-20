@@ -251,8 +251,6 @@ module.exports = [
       ];
       return ctx.reply(`📜 *Anime Quote*\n\n"${pick(quotes)}"\n\n— Rimuru`);
     },
-  },
-  },
   {
     name: 'anime', category: 'GAMES', menu: ['anime'],
     run: (ctx) => {
