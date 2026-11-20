@@ -14,6 +14,7 @@ function d() {
   s.sleeping = s.sleeping || {};
   s.afk = s.afk || {};
   s.warnings = s.warnings || {};
+  s.blocked = s.blocked || [];
   if (s.protectEnabled === undefined) s.protectEnabled = null;
   if (s.prefix === undefined) s.prefix = null;
   return s;
