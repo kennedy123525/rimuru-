@@ -110,7 +110,6 @@ function clearWarning(chatId, num) {
 
   store.save();
   return s.warnings[chatId]?.[num] || 0;
-  s.blocked = s.blocked || [];
 }
 
 // --- AFK
