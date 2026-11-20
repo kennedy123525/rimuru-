@@ -81,10 +81,20 @@ function addWarning(chatId, num) {
 
 function clearWarning(chatId, num) {
   const s = d();
-  if (!s.warnings[chatId]) return;
-  delete s.warnings[chatId][num];
-  if (!Object.keys(s.warnings[chatId]).length) delete s.warnings[chatId];
+  if (!s.warnings[chatId]?.[num]) return 0;
+
+  s.warnings[chatId][num]--;
+
+  if (s.warnings[chatId][num] <= 0) {
+    delete s.warnings[chatId][num];
+  }
+
+  if (!Object.keys(s.warnings[chatId]).length) {
+    delete s.warnings[chatId];
+  }
+
   store.save();
+  return s.warnings[chatId]?.[num] || 0;
 }
 
 // --- AFK
