@@ -155,6 +155,24 @@ module.exports = [
       });
     },
   },
+    {
+    name: 'tagall', category: 'GROUP TOOLS', menu: ['tagall'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const members = info.meta.participants || [];
+      const mentions = members.map((p) => p.id);
+
+      if (!mentions.length) return ctx.reply('No members found.');
+
+      const text = mentions.map((id) => `@${numberOf(id)}`).join('\n');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `📢 GROUP ANNOUNCEMENT\n\n${text}`,
+        mentions,
+      });
+    },
   },
   {
     name: 'delete', aliases: ['del'], category: 'GROUP TOOLS', menu: ['delete'],
@@ -179,5 +197,4 @@ module.exports = [
       });
     },
   },
-];
 ];
