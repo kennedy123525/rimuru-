@@ -136,4 +136,27 @@ module.exports = [
       return ctx.reply('Group unmuted. Everyone can send messages now.');
     },
   },
+  {
+    name: 'tagall', category: 'GROUP TOOLS', menu: ['tagall'],
+    run: async (ctx) => {
+      if (!ctx.isGroup) return ctx.reply('Groups only.');
+
+      const info = await groupInfo(ctx.sock, ctx.jid);
+      if (!ctx.isOwner && !info.admins.has(ctx.senderNum)) {
+        return ctx.reply('Admins only.');
+      }
+
+      const members = info.participants || [];
+      const mentions = members.map((p) => p.id);
+
+      if (!mentions.length) return ctx.reply('No members found.');
+
+      const text = mentions.map((id) => `@${numberOf(id)}`).join('\n');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `📢 GROUP ANNOUNCEMENT\n\n${text}`,
+        mentions,
+      });
+    },
+  },
 ];
