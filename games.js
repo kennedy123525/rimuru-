@@ -219,11 +219,38 @@ module.exports = [
     },
   },
   {
+      {
     name: 'top', aliases: ['leaderboard', 'gamescore'], category: 'GAMES', menu: ['top'],
     run: (ctx) => {
       const t = extras.topWins(10);
       if (!t.length) return ctx.reply('Nobody has won anything yet.');
       return ctx.reply(`*Game wins*\n${t.map((w, i) => `${i + 1}. ${w.name || w.num}: ${w.n}`).join('\n')}`);
+    },
+  },
+  {
+    name: 'ship', category: 'GAMES', menu: ['ship @user1 @user2'],
+    run: (ctx) => {
+      if (!ctx.isGroup) return ctx.reply('This game works in groups.');
+      const users = [...new Set(ctx.mentioned.map(numberOf))];
+      if (users.length < 2) return ctx.reply(`Tag two people. Example: ${P()}ship @user1 @user2`);
+      const percent = rnd(101);
+      return ctx.reply(`💞 *SHIP MATCH* 💞\n\n@${users[0]} ❤️ @${users[1]}\nCompatibility: ${percent}%`, {
+        mentions: ctx.mentioned.slice(0, 2),
+      });
+    },
+  },
+  {
+    name: 'quote', category: 'GAMES', menu: ['quote'],
+    run: (ctx) => {
+      const quotes = [
+        'A true friend never gives up on their dreams.',
+        'Even the smallest step can lead to a great adventure.',
+        'Strength grows when you protect what matters.',
+        'Never stop moving forward.',
+        'Your choices shape your future.',
+        'Believe in the person you are becoming.',
+      ];
+      return ctx.reply(`📜 *Anime Quote*\n\n"${pick(quotes)}"\n\n— Rimuru`);
     },
   },
 ];
