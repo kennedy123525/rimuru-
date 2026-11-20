@@ -110,10 +110,11 @@ module.exports = [
 
       if (!current) return ctx.reply('That user has no warnings.');
 
-      const remaining = settings.clearWarning(ctx.jid, num);
-      return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
+            return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
     },
+  },
   {
+    name: 'unmute',
     name: 'unmute', category: 'GROUP TOOLS', menu: ['unmute'],
     run: async (ctx) => {
       const info = await guard(ctx);
