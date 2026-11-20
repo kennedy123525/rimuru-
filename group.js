@@ -56,7 +56,7 @@ module.exports = [
       const info = await guard(ctx);
       if (!info) return;
       await ctx.sock.groupSettingUpdate(ctx.jid, 'announcement');
-            return ctx.reply('Group muted. Only admins can send messages now.');
+      return ctx.reply('Group muted. Only admins can send messages now.');
     },
   },
   {
