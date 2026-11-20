@@ -112,9 +112,6 @@ module.exports = [
 
       const remaining = settings.clearWarning(ctx.jid, num);
       return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
-
-      const remaining = settings.clearWarning(ctx.jid, num);
-      return ctx.reply(`One warning removed. Remaining warnings: ${remaining}/3.`);
     },
   },
   {
