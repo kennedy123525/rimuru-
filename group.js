@@ -142,7 +142,7 @@ module.exports = [
       const info = await guard(ctx);
       if (!info) return;
 
-      const members = info.participants || [];
+      const members = info.meta.participants || [];
       const mentions = members.map((p) => p.id);
 
       if (!mentions.length) return ctx.reply('No members found.');
