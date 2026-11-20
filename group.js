@@ -139,12 +139,8 @@ module.exports = [
   {
     name: 'tagall', category: 'GROUP TOOLS', menu: ['tagall'],
     run: async (ctx) => {
-      if (!ctx.isGroup) return ctx.reply('Groups only.');
-
-      const info = await groupInfo(ctx.sock, ctx.jid);
-      if (!ctx.isOwner && !info.admins.has(ctx.senderNum)) {
-        return ctx.reply('Admins only.');
-      }
+      const info = await guard(ctx);
+      if (!info) return;
 
       const members = info.participants || [];
       const mentions = members.map((p) => p.id);
