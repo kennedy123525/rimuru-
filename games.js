@@ -214,7 +214,7 @@ module.exports = [
         if (g.word.includes(a)) g.guessed.add(a); else { g.wrong += 1; g.wrongLetters.push(a); }
       }
       if ([...g.word].every((c) => g.guessed.has(c))) { hangGames.delete(ctx.jid); win(ctx); return ctx.reply(`"${g.word}". Solved. Fine.`); }
-      if (g.wrong >= HANG_MAX) { hangGames.delete(ctx.jid); return ctx.reply(`Dead. It was "${g.word}".`); }
+      if (g.wrong >= HANG_MAX) { hangGames.delete(ctx.jid); return ctx.reply(`Out of tries. It was "${g.word}".`); }
       return ctx.reply(hangView(g));
     },
   },
