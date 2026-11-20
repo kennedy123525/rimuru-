@@ -178,4 +178,29 @@ module.exports = [
       });
     },
   },
+  {
+    name: 'promote', category: 'GROUP TOOLS', menu: ['promote @user'],
+    run: async (ctx) => {
+      const info = await guard(ctx);
+      if (!info) return;
+
+      const target = ctx.mentioned?.[0] || ctx.ctxInfo?.participant;
+
+      if (!target) {
+        return ctx.reply('Tag or reply to the person you want to promote.');
+      }
+
+      if (info.admins.has(numberOf(target))) {
+        return ctx.reply('That person is already an admin.');
+      }
+
+      const res = await ctx.sock.groupParticipantsUpdate(ctx.jid, [target], 'promote');
+
+      if (res?.some((r) => String(r.status) !== '200')) {
+        return ctx.reply("I couldn't promote that person.");
+      }
+
+      return ctx.reply('Promotion successful! They are now a group admin. 👑');
+    },
+  },
 ];
