@@ -1,13 +1,17 @@
 // View-once reveal (owner / sub-owner only)
-//   .vv   reply to a view-once image / video / voice note: Rimuru resends it as normal media, replying to your command
+//   .vv   reply to a view-once image / video / voice note: Rimuru resends it as normal media
 //   .vv2  same, but the revealed media goes to your DM instead of the chat
+// WhatsApp strips the download info when a view-once message is quoted in a reply, so the bot
+// keeps its own copy of each view-once message that reaches it (memory only, about 1 hour).
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 const log = require('./logger');
 
 const KINDS = { imageMessage: 'image', videoMessage: 'video', audioMessage: 'audio' };
+const MAX_SAVED = 30;
+const MAX_AGE_MS = 60 * 60 * 1000;
+const MAX_BYTES = 25 * 1024 * 1024;
+const saved = new Map(); // message id -> { found, buffer, at }
 
-// Peels ephemeral + view-once wrappers (viewOnceMessage, V2, V2Extension) off the quoted message.
-// WhatsApp sometimes strips the wrapper when quoting and only leaves viewOnce: true on the media, so check that too.
 function findViewOnce(quoted) {
   let m = quoted;
   let wrapped = false;
@@ -32,27 +36,54 @@ async function toBuffer(node, type) {
   return Buffer.concat(chunks);
 }
 
-// Plain (non view-once) message content, keeping the caption / voice-note flag.
 function buildContent({ key, node }, buffer) {
   if (key === 'imageMessage') return { image: buffer, caption: node.caption || '' };
   if (key === 'videoMessage') return { video: buffer, caption: node.caption || '', mimetype: node.mimetype || 'video/mp4' };
   return { audio: buffer, mimetype: node.mimetype || 'audio/ogg; codecs=opus', ptt: node.ptt === true };
 }
 
-// Where .vv2 sends to: the private chat itself, or the sender's own number when used in a group.
 function dmTarget(ctx) {
   if (!ctx.isGroup) return ctx.jid;
   const k = ctx.msg.key;
   return [k.participantPn, k.participantAlt, ctx.sender].find((j) => j && j.endsWith('@s.whatsapp.net')) || ctx.sender;
 }
 
+function trim() {
+  const now = Date.now();
+  for (const [id, s] of saved) if (now - s.at > MAX_AGE_MS) saved.delete(id);
+  while (saved.size > MAX_SAVED) saved.delete(saved.keys().next().value);
+}
+
+// Called for every incoming message: keeps a copy of view-once media so .vv can use it later.
+async function capture(msg) {
+  try {
+    const id = msg && msg.key && msg.key.id;
+    if (!id || !msg.message) return;
+    const found = findViewOnce(msg.message);
+    if (!found) return;
+    const buffer = await toBuffer(found.node, found.type);
+    if (!buffer.length || buffer.length > MAX_BYTES) return;
+    saved.set(id, { found, buffer, at: Date.now() });
+    trim();
+  } catch (e) {
+    log.warn('view-once capture failed:', e.message);
+  }
+}
+
 async function reveal(ctx, toDm) {
   try {
-    const found = findViewOnce(ctx.ctxInfo && ctx.ctxInfo.quotedMessage);
-    if (!found) return await ctx.reply('Reply to a view-once message');
-
-    const buffer = await toBuffer(found.node, found.type);
-    if (!buffer.length) throw new Error('empty download');
+    const quotedId = ctx.ctxInfo && ctx.ctxInfo.stanzaId;
+    const copy = quotedId && saved.get(quotedId);
+    let found, buffer;
+    if (copy) {
+      found = copy.found;
+      buffer = copy.buffer;
+    } else {
+      found = findViewOnce(ctx.ctxInfo && ctx.ctxInfo.quotedMessage);
+      if (!found) return await ctx.reply('Reply to a view-once message');
+      buffer = await toBuffer(found.node, found.type);
+    }
+    if (!buffer || !buffer.length) throw new Error('empty download');
     const content = buildContent(found, buffer);
 
     if (toDm) {
@@ -64,7 +95,7 @@ async function reveal(ctx, toDm) {
     }
   } catch (e) {
     log.error('vv failed:', e.message);
-    await ctx.reply("Couldn't reveal that one.").catch(() => {});
+    await ctx.reply("Couldn't reveal that one. I can only reveal view-once messages that reached me while I was online (up to about an hour ago).").catch(() => {});
   }
 }
 
@@ -72,3 +103,4 @@ module.exports = [
   { name: 'vv', category: 'OWNER', menu: ['vv'], ownerOnly: true, run: (ctx) => reveal(ctx, false) },
   { name: 'vv2', category: 'OWNER', menu: ['vv2'], ownerOnly: true, run: (ctx) => reveal(ctx, true) },
 ];
+module.exports.capture = capture;
