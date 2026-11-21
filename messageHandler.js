@@ -225,7 +225,9 @@ async function handleMessage(sock, msg) {
     await ctx.reply(offlineReply());
     return;
   }
-  let answer = cleanReply(result.text);
+  const split = stickers.splitMood(result.text);
+  let answer = cleanReply(split.text || result.text);
+  if (split.mood) stickers.setMood(jid, split.mood);
   // Assistant-style safety boilerplate is replaced by a rude one-liner, unless the person seems to be in real distress.
   if (isBoilerplate(answer) && !isDistress(text)) answer = clapbacks.pick(ctx.isOwner ? 'deflectOwner' : 'deflect');
   memory.add(senderNum, 'user', text);
