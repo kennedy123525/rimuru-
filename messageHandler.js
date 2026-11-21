@@ -207,7 +207,7 @@ async function handleMessage(sock, msg) {
   // Provoked (insult, slur, pet name, "you're a bot"): he always hits back. No AI needed.
   // For his owner it goes to the AI instead, with a "tease, don't go cold" note.
   const provoked = provocation(text);
-  if (provoked && !ctx.isOwner) { await ctx.reply(clapbacks.pick(provoked)); return; }
+  if (provoked && !ctx.isOwner) { stickers.setMood(jid, 'angry'); await ctx.reply(clapbacks.pick(provoked)); return; }
 
   sock.sendPresenceUpdate('composing', jid).catch(() => {}); // not awaited: don't delay the AI call
   // Drop any old answers that wrongly named a company as his maker.
