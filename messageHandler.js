@@ -109,7 +109,6 @@ async function handleMessage(sock, msg) {
   const jid = msg.key.remoteJid;
   if (!jid || jid.endsWith('@broadcast') || jid.endsWith('@newsletter')) return;
   if (isDuplicate(msg.key.id)) return;
-
   const ts = Number(msg.messageTimestamp) || 0;
   if (ts && Date.now() / 1000 - ts > 120) return; // ignore old backlog after reconnect
 
