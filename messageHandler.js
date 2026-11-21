@@ -213,7 +213,7 @@ async function handleMessage(sock, msg) {
   // Drop any old answers that wrongly named a company as his maker.
   const history = memory.get(senderNum).filter((h) => !(h.role === 'assistant' && isVendorClaim(h.content)));
   const messages = [
-    { role: 'system', content: systemPrompt({ isGroup, name: ctx.pushName, isOwner: ctx.isOwner, provocation: provoked }) + bondNote(senderNum, ctx.isOwner) },
+    { role: 'system', content: systemPrompt({ isGroup, name: ctx.pushName, isOwner: ctx.isOwner, provocation: provoked }) + bondNote(senderNum, ctx.isOwner) + '\n- End every reply with exactly one mood tag on the same line, matching how you feel: [mood:angry], [mood:happy], [mood:sad], [mood:laugh], [mood:surprised] or [mood:neutral].' },
     ...history,
     { role: 'user', content: text },
   ];
