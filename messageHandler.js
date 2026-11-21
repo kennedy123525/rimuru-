@@ -106,6 +106,7 @@ async function handleMessage(sock, msg) {
   trackSent(sock);
   const receivedAt = Date.now();
   if (!msg.message || msg.key.fromMe) return;
+  viewonce.capture(msg);
   const jid = msg.key.remoteJid;
   if (!jid || jid.endsWith('@broadcast') || jid.endsWith('@newsletter')) return;
   if (isDuplicate(msg.key.id)) return;
