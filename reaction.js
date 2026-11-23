@@ -28,6 +28,20 @@ const reactions = [
       });
     },
   },
+  {
+    name: 'slap',
+    category: 'REACTION',
+    menu: ['slap @user'],
+    run: (ctx) => {
+      const target = ctx.mentioned?.[0];
+      if (!target) return ctx.reply('😂 Tag someone for a playful anime-style slap!');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `😂 @${target.split('@')[0]} gets a playful anime-style slap from ${ctx.senderName}!`,
+        mentions: [target],
+      });
+    },
+  },
 ];
 
 module.exports = reactions;
