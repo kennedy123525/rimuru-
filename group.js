@@ -232,4 +232,33 @@ module.exports = [
       return ctx.reply('Done! That person is no longer a group admin.');
     },
   },
+
+  {
+    name: 'gclink',
+    category: 'GROUP TOOLS',
+    menu: ['gclink'],
+
+    run: async (ctx) => {
+      if (!ctx.isGroup) {
+        return ctx.reply('This command only works in groups.');
+      }
+
+      try {
+        const code = await ctx.sock.groupInviteCode(ctx.jid);
+
+        if (!code) {
+          return ctx.reply("I couldn't retrieve the group link.");
+        }
+
+        return ctx.reply(
+          `🔗 GROUP INVITE LINK\n\nhttps://chat.whatsapp.com/${code}`
+        );
+
+      } catch (error) {
+        console.error('GCLINK error:', error);
+        return ctx.reply("I couldn't get the group link. Try again later.");
+      }
+    },
+  },
+
 ];
