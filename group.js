@@ -262,5 +262,87 @@ module.exports = [
       }
     },
   },
+  {
+    name: 'gcstatus',
+    category: 'GROUP TOOLS',
+    menu: ['gcstatus (reply to image/video)'],
 
+    run: async (ctx) => {
+      if (!ctx.isGroup) {
+        return ctx.reply('Groups only.');
+      }
+
+      const info = await groupInfo(ctx.sock, ctx.jid);
+
+      if (!ctx.isOwner && !info.admins.has(ctx.senderNum)) {
+        return ctx.reply('Admins only.');
+      }
+
+      const media = findMedia(ctx.msg, ['image', 'video']);
+
+      if (!media) {
+        return ctx.reply(
+          'Reply to an image or video with .gcstatus.'
+        );
+      }
+
+      const participants = info.meta.participants || [];
+
+      const statusJidList = [
+        ...new Set(
+          participants
+            .map(p => p.id)
+            .filter(id =>
+              typeof id === 'string' &&
+              id.includes('@') &&
+              id !== ctx.sock.user.id
+            )
+        )
+      ];
+
+      if (!statusJidList.length) {
+        return ctx.reply('No group members found.');
+      }
+
+      try {
+        await ctx.sock.sendMessage(
+          ctx.jid,
+          { react: { text: '⏳', key: ctx.msg.key } }
+        ).catch(() => {});
+
+        const buffer = await download(ctx.sock, media.source);
+
+        const content = media.kind === 'image'
+          ? {
+              image: buffer,
+              caption: media.node.caption || ''
+            }
+          : {
+              video: buffer,
+              mimetype: media.node.mimetype || 'video/mp4',
+              caption: media.node.caption || ''
+            };
+
+        await ctx.sock.sendMessage(
+          'status@broadcast',
+          content,
+          {
+            broadcast: true,
+            statusJidList
+          }
+        );
+
+        return ctx.reply(
+          '✅ Rimuru has published the media to WhatsApp Status!'
+        );
+
+      } catch (error) {
+        console.error('GCSTATUS error:', error);
+
+        return ctx.reply(
+          '❌ I could not publish that status. Try again.'
+        );
+      }
+    }
+  },
 ];
