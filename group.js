@@ -290,16 +290,14 @@ module.exports = [
       const participants = info.meta.participants || [];
 
       const statusJidList = [
-        ...new Set(
-          participants
-            .map(p => p.id)
-            .filter(id =>
-              typeof id === 'string' &&
-              id.includes('@') &&
-              jidNormalizedUser(id) !== jidNormalizedUser(ctx.sock.user.id)
-            )
-        )
-      ];
+  ...new Set([
+    jidNormalizedUser(ctx.sock.user.id),
+    ...participants
+      .map(p => p.id)
+      .filter(id => typeof id === 'string' && id.includes('@'))
+      .map(id => jidNormalizedUser(id))
+  ])
+];
 
       if (!statusJidList.length) {
         return ctx.reply('No group members found.');
