@@ -1,5 +1,4 @@
 
-// Public Anime GIF reaction commands
 const { gifToMp4 } = require('./ffmpeg');
 
 const reactions = [
@@ -14,13 +13,16 @@ const reactions = [
   { name: 'smile', emoji: '😊', action: 'smiles at' },
   { name: 'wink', emoji: '😉', action: 'winks at' },
   { name: 'smug', emoji: '😏', action: 'looks smug at' },
-  { name: 'slap', emoji: '😵', action: 'does a cartoon slap to' },
+  { name: 'facepalm', emoji: '🤦', action: 'facepalms at' },
 ];
 
 const commands = reactions.map((reaction) => ({
   name: reaction.name,
   category: 'REACTION',
-  menu: [`${reaction.name} @user`, `${reaction.name} (reply to someone)`],
+  menu: [
+    `${reaction.name} @user`,
+    `${reaction.name} (reply to someone)`,
+  ],
 
   run: async (ctx) => {
     const target =
@@ -34,24 +36,37 @@ const commands = reactions.map((reaction) => ({
     }
 
     try {
-      // Get a real animated GIF
+      // Request 5 GIFs from the API
       const apiResponse = await fetch(
-        `https://nekos.best/api/v2/${reaction.name}`
+        `https://nekos.best/api/v2/${reaction.name}?amount=5`,
+        {
+          headers: {
+            'User-Agent':
+              'RimuruWhatsAppBot (https://github.com/kennedy123525/rimuru-)'
+          },
+        }
       );
 
       if (!apiResponse.ok) {
-        throw new Error('GIF API request failed');
+        throw new Error(`GIF API failed: ${apiResponse.status}`);
       }
 
       const data = await apiResponse.json();
-      const gifUrl = data.results?.[0]?.url;
+      const results = (data.results || []).filter(
+        (item) => item.url &&
+          item.url.toLowerCase().endsWith('.gif')
+      );
 
-      if (!gifUrl || !gifUrl.toLowerCase().endsWith('.gif')) {
-        throw new Error('No animated GIF returned');
+      if (results.length === 0) {
+        throw new Error('No GIFs returned');
       }
 
-      // Download the GIF
-      const gifResponse = await fetch(gifUrl);
+      // Randomly select one of the available GIFs
+      const selected =
+        results[Math.floor(Math.random() * results.length)];
+
+      // Download selected GIF
+      const gifResponse = await fetch(selected.url);
 
       if (!gifResponse.ok) {
         throw new Error('GIF download failed');
@@ -65,6 +80,7 @@ const commands = reactions.map((reaction) => ({
       const mp4Buffer = await gifToMp4(gifBuffer);
 
       const sender = ctx.sender;
+
       const mentions = [...new Set(
         [sender, target].filter(Boolean)
       )];
@@ -78,7 +94,8 @@ const commands = reactions.map((reaction) => ({
       return ctx.sock.sendMessage(ctx.jid, {
         video: mp4Buffer,
         gifPlayback: true,
-        caption: `${reaction.emoji} ${senderTag} ${reaction.action} ${targetTag}!`,
+        caption:
+          `${reaction.emoji} ${senderTag} ${reaction.action} ${targetTag}!`,
         mentions,
       });
 
@@ -86,7 +103,7 @@ const commands = reactions.map((reaction) => ({
       console.error(`${reaction.name} GIF error:`, error);
 
       return ctx.reply(
-        `❌ Couldn't send the ${reaction.name} GIF. Please try again.`
+        `❌ Couldn't send the ${reaction.name} GIF. Try again later.`
       );
     }
   },
