@@ -322,14 +322,21 @@ module.exports = [
               caption: media.node.caption || ''
             };
 
-        await ctx.sock.sendMessage(
-          'status@broadcast',
-          content,
-          {
-            broadcast: true,
-            statusJidList
-          }
-        );
+        const sent = await ctx.sock.sendMessage(
+  'status@broadcast',
+  content,
+  {
+    broadcast: true,
+    statusJidList
+  }
+);
+
+console.log('[GCSTATUS] WhatsApp send result:', {
+  messageId: sent?.key?.id || null,
+  timestamp: sent?.messageTimestamp || null,
+  status: sent?.status || null,
+  messageTypes: Object.keys(sent?.message || {})
+});
 
         return ctx.reply(
           '✅ Rimuru has published the media to WhatsApp Status!'
