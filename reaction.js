@@ -70,6 +70,20 @@ const reactions = [
       });
     },
   },
+  {
+    name: 'punch',
+    category: 'REACTION',
+    menu: ['punch @user'],
+    run: (ctx) => {
+      const target = ctx.mentioned?.[0];
+      if (!target) return ctx.reply('😂 Tag someone for a cartoon punch!');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `👊 @${target.split('@')[0]} gets a playful anime-style punch from ${ctx.senderName}!`,
+        mentions: [target],
+      });
+    },
+  },
 ];
 
 module.exports = reactions;
