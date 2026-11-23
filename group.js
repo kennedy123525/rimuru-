@@ -2,6 +2,7 @@
 const settings = require('./settings');
 const { numberOf } = require('./jid');
 const { groupInfo } = require('./groupTools');
+const { findMedia, download } = require('./helpers');
 
 async function guard(ctx) {
   if (!ctx.isGroup) { await ctx.reply('Groups only.'); return null; }
