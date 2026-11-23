@@ -296,7 +296,7 @@ module.exports = [
             .filter(id =>
               typeof id === 'string' &&
               id.includes('@') &&
-              id !== ctx.sock.user.id
+              jidNormalizedUser(id) !== jidNormalizedUser(ctx.sock.user.id)
             )
         )
       ];
