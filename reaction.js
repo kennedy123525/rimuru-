@@ -56,6 +56,20 @@ const reactions = [
       });
     },
   },
+  {
+    name: 'bite',
+    category: 'REACTION',
+    menu: ['bite @user'],
+    run: (ctx) => {
+      const target = ctx.mentioned?.[0];
+      if (!target) return ctx.reply('😂 Tag someone for a cartoon bite!');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `😂 @${target.split('@')[0]} gets a silly cartoon bite from ${ctx.senderName}!`,
+        mentions: [target],
+      });
+    },
+  },
 ];
 
 module.exports = reactions;
