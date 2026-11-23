@@ -14,6 +14,7 @@ const reactions = [
   { name: 'wink', emoji: '😉', action: 'winks at' },
   { name: 'smug', emoji: '😏', action: 'looks smug at' },
   { name: 'facepalm', emoji: '🤦', action: 'facepalms at' },
+  { name: 'kiss', emoji: '😘', action: 'kisses' },
 ];
 
 const commands = reactions.map((reaction) => ({
