@@ -1,88 +1,10 @@
-// Public reaction commands
+// Public GIF reaction commands
 const reactions = [
   {
     name: 'hug',
     category: 'REACTION',
     menu: ['hug @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('🤗 Tag someone to give them a hug!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `🤗 @${target.split('@')[0]} receives a warm hug from ${ctx.senderName}!`,
-        mentions: [target],
-      });
-    },
-  },
-  {
-    name: 'pat',
-    category: 'REACTION',
-    menu: ['pat @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('😊 Tag someone to give them a friendly pat!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `😊 @${target.split('@')[0]} receives a friendly pat from ${ctx.senderName}!`,
-        mentions: [target],
-      });
-    },
-  },
-  {
-    name: 'slap',
-    category: 'REACTION',
-    menu: ['slap @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('😂 Tag someone for a playful anime-style slap!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `😂 @${target.split('@')[0]} gets a playful anime-style slap from ${ctx.senderName}!`,
-        mentions: [target],
-      });
-    },
-  },
-  {
-    name: 'yap',
-    category: 'REACTION',
-    menu: ['yap @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('😂 Tag someone to call them a yapper!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `😂 @${target.split('@')[0]} has entered maximum yap mode!`,
-        mentions: [target],
-      });
-    },
-  },
-  {
-    name: 'bite',
-    category: 'REACTION',
-    menu: ['bite @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('😂 Tag someone for a cartoon bite!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `😂 @${target.split('@')[0]} gets a silly cartoon bite from ${ctx.senderName}!`,
-        mentions: [target],
-      });
-    },
-  },
-  {
-    name: 'punch',
-    category: 'REACTION',
-    menu: ['punch @user'],
-    run: (ctx) => {
-      const target = ctx.mentioned?.[0];
-      if (!target) return ctx.reply('😂 Tag someone for a cartoon punch!');
-
-      return ctx.sock.sendMessage(ctx.jid, {
-        text: `👊 @${target.split('@')[0]} gets a playful anime-style punch from ${ctx.senderName}!`,
-        mentions: [target],
-      });
-    },
+    gif: 'PASTE_HUG_GIF_URL_HERE',
   },
 ];
 
