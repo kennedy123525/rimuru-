@@ -42,6 +42,20 @@ const reactions = [
       });
     },
   },
+  {
+    name: 'yap',
+    category: 'REACTION',
+    menu: ['yap @user'],
+    run: (ctx) => {
+      const target = ctx.mentioned?.[0];
+      if (!target) return ctx.reply('😂 Tag someone to call them a yapper!');
+
+      return ctx.sock.sendMessage(ctx.jid, {
+        text: `😂 @${target.split('@')[0]} has entered maximum yap mode!`,
+        mentions: [target],
+      });
+    },
+  },
 ];
 
 module.exports = reactions;
