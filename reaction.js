@@ -3,24 +3,18 @@
 const { gifToMp4 } = require('./ffmpeg');
 
 const reactions = [
-  {
-    name: 'hug',
-    endpoint: 'hug',
-    emoji: '🤗',
-    action: 'hugs',
-    fallbackUrl: 'https://media1.tenor.com/m/yrdaKdQ69WYAAAAd/hug.gif',
-  },
-  { name: 'pat', endpoint: 'pat', emoji: '🥰', action: 'pats' },
-  { name: 'highfive', endpoint: 'highfive', emoji: '🙌', action: 'high-fives' },
-  { name: 'wave', endpoint: 'wave', emoji: '👋', action: 'waves at' },
-  { name: 'dance', endpoint: 'dance', emoji: '💃', action: 'dances with' },
-  { name: 'cry', endpoint: 'cry', emoji: '😭', action: 'cries with' },
-  { name: 'poke', endpoint: 'poke', emoji: '👉', action: 'pokes' },
-  { name: 'bonk', endpoint: 'bonk', emoji: '✨', action: 'playfully bonks' },
-  { name: 'smile', endpoint: 'smile', emoji: '😊', action: 'smiles at' },
-  { name: 'wink', endpoint: 'wink', emoji: '😉', action: 'winks at' },
-  { name: 'smug', endpoint: 'smug', emoji: '😏', action: 'gives a smug look to' },
-  { name: 'slap', endpoint: 'slap', emoji: '😵', action: 'does a cartoon slap to' },
+  { name: 'hug', emoji: '🤗', action: 'hugs' },
+  { name: 'pat', emoji: '🥰', action: 'pats' },
+  { name: 'highfive', emoji: '🙌', action: 'high-fives' },
+  { name: 'wave', emoji: '👋', action: 'waves at' },
+  { name: 'dance', emoji: '💃', action: 'dances with' },
+  { name: 'cry', emoji: '😭', action: 'cries with' },
+  { name: 'poke', emoji: '👉', action: 'pokes' },
+  { name: 'bonk', emoji: '✨', action: 'playfully bonks' },
+  { name: 'smile', emoji: '😊', action: 'smiles at' },
+  { name: 'wink', emoji: '😉', action: 'winks at' },
+  { name: 'smug', emoji: '😏', action: 'looks smug at' },
+  { name: 'slap', emoji: '😵', action: 'does a cartoon slap to' },
 ];
 
 const commands = reactions.map((reaction) => ({
@@ -35,47 +29,39 @@ const commands = reactions.map((reaction) => ({
 
     if (!target) {
       return ctx.reply(
-        `Please tag someone or reply to their message to use .${reaction.name}!`
+        `Tag someone or reply to their message to use .${reaction.name}!`
       );
     }
 
     try {
-      let gifBuffer;
+      // Get a real animated GIF
+      const apiResponse = await fetch(
+        `https://nekos.best/api/v2/${reaction.name}`
+      );
 
-      if (reaction.fallbackUrl) {
-        const response = await fetch(reaction.fallbackUrl);
-
-        if (!response.ok) {
-          throw new Error('GIF download failed');
-        }
-
-        gifBuffer = Buffer.from(await response.arrayBuffer());
-      } else {
-        const apiResponse = await fetch(
-          `https://api.waifu.pics/sfw/${reaction.endpoint}`
-        );
-
-        if (!apiResponse.ok) {
-          throw new Error('Reaction API failed');
-        }
-
-        const data = await apiResponse.json();
-
-        if (!data.url) {
-          throw new Error('No GIF was returned');
-        }
-
-        const gifResponse = await fetch(data.url);
-
-        if (!gifResponse.ok) {
-          throw new Error('GIF download failed');
-        }
-
-        gifBuffer = Buffer.from(
-          await gifResponse.arrayBuffer()
-        );
+      if (!apiResponse.ok) {
+        throw new Error('GIF API request failed');
       }
 
+      const data = await apiResponse.json();
+      const gifUrl = data.results?.[0]?.url;
+
+      if (!gifUrl || !gifUrl.toLowerCase().endsWith('.gif')) {
+        throw new Error('No animated GIF returned');
+      }
+
+      // Download the GIF
+      const gifResponse = await fetch(gifUrl);
+
+      if (!gifResponse.ok) {
+        throw new Error('GIF download failed');
+      }
+
+      const gifBuffer = Buffer.from(
+        await gifResponse.arrayBuffer()
+      );
+
+      // Convert GIF to WhatsApp-compatible MP4
       const mp4Buffer = await gifToMp4(gifBuffer);
 
       const sender = ctx.sender;
@@ -95,10 +81,12 @@ const commands = reactions.map((reaction) => ({
         caption: `${reaction.emoji} ${senderTag} ${reaction.action} ${targetTag}!`,
         mentions,
       });
+
     } catch (error) {
       console.error(`${reaction.name} GIF error:`, error);
+
       return ctx.reply(
-        `❌ I couldn't send the ${reaction.name} GIF. Try again later.`
+        `❌ Couldn't send the ${reaction.name} GIF. Please try again.`
       );
     }
   },
