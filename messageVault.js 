@@ -1,0 +1,90 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const TTL_MS = 6 * 60 * 60 * 1000;
+const MAX_PER_SESSION = 1200;
+
+const DATA_DIR = path.join(__dirname, '..', 'data');
+const FILE = path.join(DATA_DIR, 'message-vault.json');
+
+const sessions = new Map();
+
+function digits(value) {
+    return String(value || '')
+        .split('@')[0]
+        .split(':')[0]
+        .replace(/\D/g, '');
+}
+
+function remember(phoneNumber, message) {
+    try {
+        const phone = digits(phoneNumber);
+        const jid = message?.key?.remoteJid;
+        const id = message?.key?.id;
+
+        if (!phone || !jid || !id || !message?.message) return null;
+
+        const entry = {
+            id,
+            jid,
+            fromMe: !!message.key.fromMe,
+            pushName: message.pushName || null,
+            timestamp: Date.now()
+        };
+
+        if (!sessions.has(phone)) {
+            sessions.set(phone, new Map());
+        }
+
+        const map = sessions.get(phone);
+        map.set(`${jid}|${id}`, entry);
+
+        for (const [key, item] of map) {
+            if (Date.now() - item.timestamp > TTL_MS) {
+                map.delete(key);
+            }
+        }
+
+        while (map.size > MAX_PER_SESSION) {
+            map.delete(map.keys().next().value);
+        }
+
+        return entry;
+    } catch {
+        return null;
+    }
+}
+
+function lookup(phoneNumber, jid, id) {
+    const map = sessions.get(digits(phoneNumber));
+    return map?.get(`${jid}|${id}`) || null;
+}
+
+function getRecent(phoneNumber, limit = 25) {
+    const map = sessions.get(digits(phoneNumber));
+    if (!map) return [];
+
+    return [...map.values()]
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, limit);
+}
+
+function count(phoneNumber) {
+    return sessions.get(digits(phoneNumber))?.size || 0;
+}
+
+function clear(phoneNumber) {
+    sessions.delete(digits(phoneNumber));
+}
+
+module.exports = {
+    remember,
+    lookup,
+    getRecent,
+    count,
+    clear,
+    TTL_MS,
+    MAX_PER_SESSION
+};
